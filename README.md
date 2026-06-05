@@ -13,13 +13,6 @@ Foro con **Angular** (web) + **Laravel** (API). Estructura simplificada para apr
 
 Demo: `demo@foro.test` / `password123` (admin → `/admin`)
 
-## Dónde está cada cosa
-
-| Parte | Guía |
-|-------|------|
-| Frontend | [frontend/src/app/LEEME.txt](frontend/src/app/LEEME.txt) |
-| Backend | [backend/LEEME.txt](backend/LEEME.txt) |
-
 ### Frontend (3 archivos clave + pantallas)
 
 ```
