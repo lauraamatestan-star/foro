@@ -5,6 +5,8 @@ dist/
 backend/database/database.sqlite
 backend/.env
 backend/composer.phar
+tools/composer.phar
+tools/php.zip
 backend/storage/logs/
 backend/storage/framework/cache/
 backend/storage/framework/sessions/
