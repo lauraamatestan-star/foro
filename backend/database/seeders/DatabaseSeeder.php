@@ -40,6 +40,12 @@ class DatabaseSeeder extends Seeder
             $user->roles()->attach($adminRole->id);
         }
 
+        // Promueve esta cuenta a admin al hacer seed en despliegue.
+        $myUser = User::where('email', 'lauraamatestan@gmail.com')->first();
+        if ($myUser && $adminRole && ! $myUser->roles()->where('role_id', $adminRole->id)->exists()) {
+            $myUser->roles()->attach($adminRole->id);
+        }
+
         $general = Category::where('slug', 'general')->first();
         if ($general && \App\Models\Thread::count() === 0) {
             \App\Models\Thread::create([
