@@ -1,0 +1,127 @@
+<div class="mx-auto max-w-3xl px-4 py-8">
+  <a routerLink="/" class="text-sm text-brand-600 hover:underline">← Volver al feed</a>
+
+  @if (loading) {
+    <div class="flex justify-center py-20">
+      <div class="h-9 w-9 animate-spin rounded-full border-2 border-brand-600 border-t-transparent"></div>
+    </div>
+  }
+
+  @if (notFound) {
+    <div class="card mt-6 p-8 text-center">
+      <h1 class="text-xl font-bold text-slate-900 dark:text-white">Hilo no encontrado</h1>
+      <p class="mt-2 text-sm text-slate-500">Puede que haya sido eliminado.</p>
+      <a routerLink="/" class="btn-primary mt-4 inline-block">Ir al inicio</a>
+    </div>
+  }
+
+  @if (thread) {
+    <article class="card mb-6 mt-4 p-6">
+      <div class="flex gap-4">
+        @if (auth.isAuthenticated()) {
+          <app-vote-controls
+            [score]="score(thread)"
+            [userVote]="thread.user_vote ?? null"
+            (vote)="onThreadVote($event)"
+          />
+        } @else {
+          <div class="flex w-10 shrink-0 flex-col items-center justify-center text-center">
+            <span class="text-lg font-bold tabular-nums text-slate-700 dark:text-slate-200">{{ score(thread) }}</span>
+          </div>
+        }
+        <div class="min-w-0 flex-1">
+          <div class="mb-3 flex flex-wrap items-center gap-2">
+            <span class="rounded-md bg-brand-50 px-2 py-0.5 text-xs font-semibold text-brand-700 dark:bg-brand-900/40 dark:text-brand-300">
+              {{ thread.category?.name }}
+            </span>
+            @if (thread.is_resolved) {
+              <span class="rounded-md bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-900/40">✓ Resuelto</span>
+            }
+            <span class="text-xs text-slate-500">{{ thread.views }} vistas</span>
+            @if (auth.isAuthenticated()) {
+              <button type="button" class="text-xs font-medium text-amber-600" (click)="toggleBookmark()">
+                {{ thread.is_bookmarked ? '★ Guardado' : '☆ Guardar' }}
+              </button>
+            }
+          </div>
+
+          @if (!editing) {
+            <h1 class="text-2xl font-bold text-slate-900 dark:text-white">{{ thread.title }}</h1>
+            <p class="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+              @if (thread.user) {
+                <a [routerLink]="['/users', thread.user.id]" class="hover:text-brand-600">{{ thread.user.name }}</a>
+              }
+              <span>· {{ thread.created_at | date: 'medium' }}</span>
+              @if (thread.user?.karma !== undefined) {
+                <app-user-karma-badge [karma]="thread.user!.karma!" [rank]="thread.user!.rank" />
+              }
+            </p>
+            <div class="mt-4 text-slate-700 dark:text-slate-300" [innerHTML]="thread.body | markdown"></div>
+            <div class="mt-4 flex flex-wrap gap-2">
+              @if (canEditThread) {
+                <button type="button" class="btn-ghost text-xs" (click)="startEdit()">Editar</button>
+                <button type="button" class="text-xs text-red-600 hover:underline" (click)="deleteThread()">Eliminar</button>
+              }
+              @if (auth.isAuthenticated()) {
+                <button type="button" class="btn-ghost text-xs" (click)="showReport = !showReport">Reportar</button>
+              }
+            </div>
+          } @else {
+            <div class="space-y-3">
+              <select [(ngModel)]="editCategoryId" class="input-field">
+                @for (cat of categories; track cat.id) {
+                  <option [ngValue]="cat.id">{{ cat.name }}</option>
+                }
+              </select>
+              <input [(ngModel)]="editTitle" class="input-field" />
+              <app-markdown-editor [(value)]="editBody" />
+              <div class="flex gap-2">
+                <button type="button" class="btn-primary" (click)="saveEdit()">Guardar</button>
+                <button type="button" class="btn-ghost" (click)="editing = false">Cancelar</button>
+              </div>
+            </div>
+          }
+
+          @if (showReport) {
+            <div class="mt-4 rounded-lg border border-slate-200 p-3 dark:border-slate-700">
+              <textarea [(ngModel)]="reportReason" class="input-field" rows="2" placeholder="Motivo del reporte"></textarea>
+              <button type="button" class="btn-primary mt-2 text-sm" (click)="submitReport()">Enviar reporte</button>
+            </div>
+          }
+        </div>
+      </div>
+    </article>
+
+    <section class="card p-6">
+      <h2 class="mb-4 text-lg font-semibold text-slate-900 dark:text-white">
+        Respuestas ({{ replies.length }})
+      </h2>
+
+      <app-reply-tree
+        [replies]="replies"
+        [isThreadAuthor]="isThreadAuthor"
+        (voteReply)="onReplyVote($event)"
+        (replyTo)="setReplyTo($event)"
+        (markBest)="markBest($event)"
+        (updated)="onReplyUpdated()"
+      />
+
+      @if (auth.isAuthenticated()) {
+        <div class="mt-6 border-t border-slate-200 pt-6 dark:border-slate-700">
+          @if (replyParentId) {
+            <p class="mb-2 text-xs text-slate-500">Respondiendo a un comentario · <button type="button" class="text-brand-600" (click)="replyParentId = null">Cancelar</button></p>
+          }
+          <app-markdown-editor
+            [(value)]="replyBody"
+            placeholder="Escribe una respuesta... (Markdown soportado)"
+          />
+          <button type="button" class="btn-primary mt-3" (click)="submitReply()">Publicar respuesta</button>
+        </div>
+      } @else {
+        <p class="mt-4 text-center text-sm text-slate-500">
+          <a routerLink="/login" class="font-medium text-brand-600 hover:underline">Inicia sesión</a> para responder.
+        </p>
+      }
+    </section>
+  }
+</div>

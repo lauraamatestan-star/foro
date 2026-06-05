@@ -1,0 +1,16 @@
+node_modules/
+vendor/
+dist/
+.angular/
+backend/database/database.sqlite
+backend/.env
+backend/composer.phar
+backend/storage/logs/
+backend/storage/framework/cache/
+backend/storage/framework/sessions/
+backend/storage/framework/views/
+*.log
+.DS_Store
+.phpunit.result.cache
+backend/.phpunit.result.cache
+tools/git/

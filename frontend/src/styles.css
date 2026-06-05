@@ -1,0 +1,39 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+  body {
+    @apply bg-slate-50 text-slate-900 transition-colors duration-200;
+  }
+  html.dark body {
+    @apply bg-slate-950 text-slate-100;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900;
+  }
+  .input-field {
+    @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm outline-none ring-brand-500 transition focus:ring-2 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100;
+  }
+  .btn-primary {
+    @apply rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700 disabled:opacity-50;
+  }
+  .btn-ghost {
+    @apply rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800;
+  }
+}
+
+.prose-markdown h1 { @apply text-xl font-bold mb-2; }
+.prose-markdown strong { @apply font-semibold; }
+.prose-markdown em { @apply italic; }
+.prose-markdown code { @apply rounded bg-slate-100 px-1 py-0.5 text-sm dark:bg-slate-800; }
+.prose-markdown pre { @apply my-2 overflow-x-auto rounded-lg bg-slate-900 p-3 text-sm text-slate-100; }
+.prose-markdown p { @apply mb-2; }

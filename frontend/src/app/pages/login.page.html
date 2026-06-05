@@ -1,0 +1,39 @@
+<div class="mx-auto flex min-h-[70vh] max-w-md flex-col justify-center px-4 py-12">
+  <div class="card p-8">
+    <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Bienvenido de nuevo</h2>
+    <p class="mt-1 text-sm text-slate-500">Accede a tu cuenta del foro</p>
+
+    <div class="my-6">
+      <app-google-auth-button (clicked)="auth.redirectToGoogle()" />
+    </div>
+
+    <div class="relative mb-6">
+      <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200 dark:border-slate-700"></div></div>
+      <div class="relative flex justify-center text-xs uppercase"><span class="bg-white px-2 text-slate-500 dark:bg-slate-900">o con email</span></div>
+    </div>
+
+    <form (ngSubmit)="login()" class="space-y-4">
+      <div>
+        <label class="mb-1 block text-sm font-medium">Email</label>
+        <input [(ngModel)]="email" name="email" type="email" class="input-field" required />
+      </div>
+      <div>
+        <div class="mb-1 flex items-center justify-between">
+          <label class="text-sm font-medium">Contraseña</label>
+          <a routerLink="/forgot-password" class="text-xs text-brand-600 hover:underline">¿Olvidaste la contraseña?</a>
+        </div>
+        <input [(ngModel)]="password" name="password" type="password" class="input-field" required />
+      </div>
+      @if (error) {
+        <p class="text-sm text-red-600 dark:text-red-400">{{ error }}</p>
+      }
+      <button type="submit" class="btn-primary w-full" [disabled]="loading">
+        {{ loading ? 'Entrando...' : 'Iniciar sesión' }}
+      </button>
+    </form>
+
+    <p class="mt-6 text-center text-sm text-slate-500">
+      ¿No tienes cuenta? <a routerLink="/register" class="font-medium text-brand-600 hover:underline">Regístrate</a>
+    </p>
+  </div>
+</div>
