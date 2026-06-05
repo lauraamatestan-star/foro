@@ -34,6 +34,7 @@ class AuthController extends Controller
         ]);
 
         $this->roleService->assignDefaultRole($user, $isFirstUser);
+        $this->roleService->syncAdminByConfiguredEmails($user);
 
         return $this->tokenResponse($user, 201);
     }
@@ -54,6 +55,8 @@ class AuthController extends Controller
         if ($user->isBanned()) {
             return response()->json(['message' => 'Tu cuenta ha sido suspendida'], 403);
         }
+
+        $this->roleService->syncAdminByConfiguredEmails($user);
 
         return $this->tokenResponse($user);
     }

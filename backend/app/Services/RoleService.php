@@ -25,4 +25,30 @@ class RoleService
         Role::firstOrCreate(['name' => Role::ADMIN]);
         Role::firstOrCreate(['name' => Role::USER]);
     }
+
+    /**
+     * Promueve a admin si el email del usuario está en ADMIN_EMAILS.
+     * Formato esperado: ADMIN_EMAILS=email1@x.com,email2@x.com
+     */
+    public function syncAdminByConfiguredEmails(User $user): void
+    {
+        $email = strtolower(trim((string) $user->email));
+        if ($email === '') {
+            return;
+        }
+
+        $adminEmails = array_values(array_filter(array_map(
+            static fn (string $value): string => strtolower(trim($value)),
+            explode(',', (string) env('ADMIN_EMAILS', ''))
+        )));
+
+        if (! in_array($email, $adminEmails, true)) {
+            return;
+        }
+
+        $adminRole = Role::firstOrCreate(['name' => Role::ADMIN]);
+        if (! $user->roles()->where('role_id', $adminRole->id)->exists()) {
+            $user->roles()->attach($adminRole->id);
+        }
+    }
 }

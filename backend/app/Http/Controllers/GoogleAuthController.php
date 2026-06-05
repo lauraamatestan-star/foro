@@ -78,6 +78,8 @@ class GoogleAuthController extends Controller
                 $this->roleService->assignDefaultRole($user, $isFirstUser);
             }
 
+            $this->roleService->syncAdminByConfiguredEmails($user);
+
             $token = $user->createToken('api_token')->plainTextToken;
 
             return redirect("{$frontend}/auth/callback?token=".urlencode($token));
