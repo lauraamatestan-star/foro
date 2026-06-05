@@ -35,4 +35,4 @@ Variables en `backend/.env`: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE
 
 ## Producción
 
-Vercel (frontend) + Render (backend). Ver variables en `.env.example` y despliegue anterior en commits/docs si lo necesitas.
+Vercel (frontend) + Render (backend). Ver variables en `.env.example`.
